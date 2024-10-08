@@ -1,4 +1,4 @@
-Package: sinasc
+Package: PaNasc
 Type: Package
 License: MIT License
 Title: Download and Transform SINASC data from DATASUS
