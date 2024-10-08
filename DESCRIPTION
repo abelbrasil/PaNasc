@@ -1,0 +1,14 @@
+Package: sinasc
+Type: Package
+License: MIT License
+Title: Download and Transform SINASC data from DATASUS
+Version: 0.1.0
+Author: Luan Augusto <luanguto87@gmail.com>
+Maintainer: Luan Augusto <luanguto87@gmail.com>
+Description: This package is able to extract data about live birth (SINASC) from DATASUS.
+    It is also possible connect the raw file with the respective label.
+Encoding: UTF-8
+LazyData: true
+RoxygenNote: 7.3.2
+Depends: 
+    R (>= 2.10)
