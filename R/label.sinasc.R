@@ -14,14 +14,13 @@ label.sinasc <- function(x){
   require(foreign)
   require(dplyr)
   require(lubridate)
+  base <- x
 
-  base <- x %>%
-    select(CODESTAB,CODMUNNASC,LOCNASC,IDADEMAE,ESTCIVMAE,ESCMAE,CODOCUPMAE,QTDFILVIVO,QTDFILMORT,CODMUNRES,GESTACAO,GRAVIDEZ,
-           PARTO,CONSULTAS,DTNASC,HORANASC,SEXO,APGAR1,APGAR5,RACACOR,PESO,IDANOMAL,DTCADASTRO,CODANOMAL,CODMUNNATU,SERIESCMAE,
-           DTNASCMAE,RACACORMAE,QTDGESTANT,QTDPARTNOR,QTDPARTCES,IDADEPAI,SEMAGESTAC,TPMETESTIM,CONSPRENAT,MESPRENAT,ESCMAE2010)
 
   base <- base %>%
     mutate(ESTCIVMAE=recode(ESTCIVMAE,`1`="Solteira",`2`="Casada",`3`="Viúva",`4`="Divorciada",`5`="União Estável",`9`="Ignorado"),
+
+           LOCNASC=recode(LOCNASC,`1`="Hospital",`2`="Outros estabelecimentos de saúde",`3`="Domicílio",`4`="Outros",`5`="Aldeia Indígena",`9`="Ignorado"),
 
            ESCMAE=recode(ESCMAE,`1`="Nenhuma",`2`="1 a 2 anos",`3`="4 a 7 anos",`4`="8 a 11 anos",`5`="12 e mais",`9`="Ignorado"),
 
@@ -44,11 +43,62 @@ label.sinasc <- function(x){
 
            RACACORMAE=recode(RACACORMAE,`1`="Branca",`2`="Preta",`3`="Amarela",`4`="Parda",`5`="Indígena",`9`="Ignorado"),
 
+           TPMETESTIM=recode(TPMETESTIM,`1`="Exame físico",`2`="Outro método",`9`="Ignorado"),
+
+           CONSULTAS=recode(CONSULTAS,`1`="Nenhuma",`2`="de 1 a 3",`3`="de 4 a 6",`4`="7 e mais",`9`="Ignorado"),
+
+           MESPRENAT=recode(MESPRENAT,`01`="Primeiro",`02`="Segundo",`03`="Terceiro",`04`="Quarto",`05`="Quinto",`06`="Sexto",`07`="Sétimo",
+                            `08`="Oitavo",`09`="Nono",`99`="Ignorado"),
+
+           CONSULTAS=recode(CONSULTAS,`1`="Nenhuma",`2`="de 1 a 3;",`3`="de 4 a 6",`4`="7 e mais",`9`="Ignorado"),
+
+           TPAPRESENT=recode(TPAPRESENT,`1`="Cefálica",`2`="Pélvica ou podálica",`3`="Transversa",`9`="Ignorado"),
+
+           STTRABPART=recode(STTRABPART,`1`="Sim",`2`="Não",`9`="Ignorado"),
+
+           STCESPARTO=recode(STCESPARTO,`1`="Sim",`2`="Não",`3`="Não se aplica",`9`="Ignorado"),
+
+           TPNASCASSI=recode(TPNASCASSI,`1`="Médico",`2`="Enfermeira/Obstetriz",`3`="Parteira",`4`="Outro",`9`="Ignorado"),
+
+           TPFUNCRESP=recode(TPFUNCRESP,`1`="Médico",`2`="Enfermagem",`3`="Parteira",`4`="Func. Cartório",`5`="Outros",`9`="Ignorado"),
+
+           TPDOCRESP=recode(TPDOCRESP,`1`="CNES",`2`="CRM",`3`="COREN",`4`="RG",`5`="CPF",`9`="Ignorado"),
+
+           ESCMAEAGR1=recode(ESCMAEAGR1,`00`="Sem Escolaridade",`01`="Fundamental I Incompleto",`02`="Fundamental I Completo",
+                             `03`="Fundamental II Incompleto",`04`="Fundamental II Completo",`05`="Ensino Médio Incompleto",
+                             `06`="Ensino Médio Completo",`07`="Superior Incompleto",`08`="Superior Completo",`09`="Ignorado",
+                             `10`="Fundamental I Incompleto ou Inespecífico",`11`="Fundamental II Incompleto ou Inespecífico",
+                             `12`="Ensino Médio Incompleto ou Inespecífico"),
+
+           STDNEPIDEM=recode(STDNEPIDEM,`1`="Sim",`2`="Não",`9`="Ignorado"),
+
+           STDNNOVA=recode(STDNNOVA,`1`="Sim",`2`="Não",`9`="Ignorado"),
+
+           TPROBSON=recode(TPROBSON,`01`="Nulípara, gest un, cefál >37sem, tp espontaneo",`02`="Nulípara, gest un, cefál >37sem c/ind CS préTP",
+                             `03`="Multípara,(s/ces prev)gest un cef >37sem espon",`04`=" Multíp,(s/ces prev)gest un cef >37s ind/CSpréTP",`05`="C/CS ant gestação única, cefálica, > 37 semanas",
+                             `06`="Todos partos pélvicos em nulíparas",`07`="Todos partos pélv em multíparas (incl CS prévia)",`08`="Todas gest múltiplas (incluindo CS prévia)",`09`="Todas apres anormais (incluindo CS prévia)",
+                             `10`="Todas gest unic cefal <36sem (incl CS prévia)",`11`="Nasc n clas por aus resp aos itens necessarios"),
+
+           PARIDADE=recode(PARIDADE,`0`="nulípara",`1`="multipara",`9`="Ignorado"),
+
+           KOTELCHUCK=recode(KOTELCHUCK,`1`="Não fez pré-natal",`2`="Inadequado",`3`="Intermediário",`4`="Adequado",
+                             `5`="Mais que adequado",`6`="Não Classificados"),
+
+           ORIGEM=recode(ORIGEM,`1`="Oracle",`2`="FTP",`3`="SEAD"),
+
            DTNASC=dmy(DTNASC),
 
            DTNASCMAE=dmy(DTNASCMAE),
 
            DTCADASTRO=dmy(DTCADASTRO),
+
+           DTRECORIGA=dmy(DTRECORIGA),
+
+           DTRECEBIM=dmy(DTRECEBIM),
+
+           DTDECLARAC=dmy(DTDECLARAC),
+
+           DTULTMENST=dmy(DTULTMENST),
 
            HORANASC=paste0(substr(HORANASC,1,2),":", substr(HORANASC,3,4)))
 
@@ -82,6 +132,7 @@ label.sinasc <- function(x){
                                                                                        ifelse(base$CODOCUPMAE=="510125","Chefe de cozinha",base$TITULO)))))))))))
   base <- base %>%
     rename(OCUPMAE = TITULO, UF = SIGLA_UF, MUNICIPIO = MUNNOMEX, ANOMALIA = DESCR)
+  base <- data.frame(lapply(base, function(x) if (is.factor(x)) as.character(x) else x))
 
   return(base)
 }
