@@ -120,6 +120,18 @@ label.sinasc <- function(x){
 
            CONSPRENAT=as.numeric(as.character(CONSPRENAT)),
 
+           DIFDATA=as.numeric(as.character(DIFDATA)),
+
+           CONSPRENAT=as.numeric(as.character(CONSPRENAT)),
+
+           APGAR1=as.numeric(as.character(APGAR1)),
+
+           APGAR5=as.numeric(as.character(APGAR5)),
+
+           SERIESCMAE=as.numeric(as.character(SERIESCMAE)),
+
+           NUMEROLOTE=as.numeric(as.character(NUMEROLOTE)),
+
            SEMAGESTAC=as.numeric(as.character(SEMAGESTAC)))
 
   base <- base %>%
