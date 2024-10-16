@@ -39,7 +39,7 @@ label.sinasc <- function(x){
 
            GRAVIDEZ=recode(GRAVIDEZ,`1`="Única",`2`="Dupla",`3`="Tripla ou mais",`9`="Ignorado"),
 
-           PARTO=recode(PARTO,`1`="Vaginal",`2`="Cesário"),
+           PARTO=recode(PARTO,`1`="Vaginal",`2`="Cesário",`9`="Ignorado"),
 
            RACACORMAE=recode(RACACORMAE,`1`="Branca",`2`="Preta",`3`="Amarela",`4`="Parda",`5`="Indígena",`9`="Ignorado"),
 
@@ -70,9 +70,9 @@ label.sinasc <- function(x){
                              `10`="Fundamental I Incompleto ou Inespecífico",`11`="Fundamental II Incompleto ou Inespecífico",
                              `12`="Ensino Médio Incompleto ou Inespecífico"),
 
-           STDNEPIDEM=recode(STDNEPIDEM,`1`="Sim",`2`="Não",`9`="Ignorado"),
+           STDNEPIDEM=recode(STDNEPIDEM,`1`="Sim",`0`="Não",`9`="Ignorado"),
 
-           STDNNOVA=recode(STDNNOVA,`1`="Sim",`2`="Não",`9`="Ignorado"),
+           STDNNOVA=recode(STDNNOVA,`1`="Sim",`0`="Não",`9`="Ignorado"),
 
            TPROBSON=recode(TPROBSON,`01`="Nulípara, gest un, cefál >37sem, tp espontaneo",`02`="Nulípara, gest un, cefál >37sem c/ind CS préTP",
                              `03`="Multípara,(s/ces prev)gest un cef >37sem espon",`04`=" Multíp,(s/ces prev)gest un cef >37s ind/CSpréTP",`05`="C/CS ant gestação única, cefálica, > 37 semanas",
@@ -82,7 +82,7 @@ label.sinasc <- function(x){
            PARIDADE=recode(PARIDADE,`0`="nulípara",`1`="multipara",`9`="Ignorado"),
 
            KOTELCHUCK=recode(KOTELCHUCK,`1`="Não fez pré-natal",`2`="Inadequado",`3`="Intermediário",`4`="Adequado",
-                             `5`="Mais que adequado",`6`="Não Classificados"),
+                             `5`="Mais que adequado",`6`="Não Classificados",`9`="Ignorado"),
 
            ORIGEM=recode(ORIGEM,`1`="Oracle",`2`="FTP",`3`="SEAD"),
 
@@ -100,7 +100,27 @@ label.sinasc <- function(x){
 
            DTULTMENST=dmy(DTULTMENST),
 
-           HORANASC=paste0(substr(HORANASC,1,2),":", substr(HORANASC,3,4)))
+           HORANASC=paste0(substr(HORANASC,1,2),":", substr(HORANASC,3,4)),
+
+           IDADEMAE=as.numeric(as.character(IDADEMAE)),
+
+           QTDFILVIVO=as.numeric(as.character(QTDFILVIVO)),
+
+           QTDFILMORT=as.numeric(as.character(QTDFILMORT)),
+
+           QTDFILMORT=as.numeric(as.character(QTDFILMORT)),
+
+           PESO=as.numeric(as.character(PESO)),
+
+           QTDGESTANT=as.numeric(as.character(QTDGESTANT)),
+
+           QTDPARTNOR=as.numeric(as.character(QTDPARTNOR)),
+
+           QTDPARTCES=as.numeric(as.character(QTDPARTCES)),
+
+           CONSPRENAT=as.numeric(as.character(CONSPRENAT)),
+
+           SEMAGESTAC=as.numeric(as.character(SEMAGESTAC)))
 
   base <- base %>%
     left_join(CID10%>% select(CID10, DESCR),by=join_by(CODANOMAL==CID10),keep = FALSE)
