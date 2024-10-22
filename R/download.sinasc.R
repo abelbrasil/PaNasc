@@ -1,8 +1,8 @@
 #' Download SINASC
 #'
 #' Download data about live birth from SINASC - DATASUS and tranform from .dbc file to data frame
-#' @param inicio The year that start the files extract.
-#' @param fim The year that finish the files extract. By default the last year. Can't be the current year.
+#' @param begin The year that start the files extract.
+#' @param end The year that finish the files extract. By default the last year. Can't be the current year.
 #' @param UF The state acronym.
 #' @param cod_mat The birth establishment code.
 #' @seealso \code{\link{label.sinasc}}
@@ -12,15 +12,15 @@
 #' pe <- download.sinasc(2022,UF="PE")
 #' sp <- download.sinasc(2020,2022,"SP")
 #' @export
-download.sinasc <- function(inicio,fim,UF,cod_mat=""){
+download.sinasc <- function(begin,end,UF,cod_mat=""){
   require(read.dbc)
   require(dplyr)
   urls <- c()
   db <- c()
-  if (fim==as.numeric(format(Sys.Date(), "%Y"))){
+  if (end==as.numeric(format(Sys.Date(), "%Y"))){
     stop("Error: Not is possible download file of the current year")
   }
-  anos <- c(inicio:fim)
+  anos <- c(begin:end)
   for (i in anos) {
     if(i==as.numeric(format(Sys.Date(), "%Y"))-1){
       url <- paste0("ftp://ftp.datasus.gov.br/dissemin/publicos/SINASC/PRELIM/DNRES/","DN",UF,i,".dbc")
