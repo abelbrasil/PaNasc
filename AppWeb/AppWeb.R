@@ -6,6 +6,7 @@ library(devtools)
 install_github("abelbrasil/PaNasc", auth_token = "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")
 library(PaNasc)
 library(shiny)
+library(shinyjs)
 library(bslib)
 library(curl)
 library(rvest)
@@ -21,16 +22,35 @@ state <- c("AC", "AL", "AP", "AM", "BA", "CE", "DF", "ES", "GO", "MA",
 
 # Interface do usuário (UI)
 ui <- fluidPage(
-  column(8,offset = 5, titlePanel("Baixar Arquivos SINASC")),
+  useShinyjs(),
+
+  # Cabeçalho com título à esquerda e logo à direita
+  tags$div(
+    style = "display: flex; justify-content: space-between; align-items: center; padding: 10px; background-color: #f8f9fa; border-bottom: 2px solid #ddd;",
+
+    # Título do aplicativo à esquerda
+    tags$h2("Download Arquivos SINASC", style = "margin: 0;"),
+
+    # Imagem da logo à direita
+    tags$img(src = "Logo_da_EBSERH.png", height = "40px", style = "margin-left: 5px;")
+  ),
+
+  #column(8,offset = 5, titlePanel("Baixar Arquivos SINASC")),
   theme = shinythemes::shinytheme("flatly"),
+  #tags$div(tags$img(src = "Logo_da_EBSERH.png", height = "40px", style = "margin-left: 5px;")),
 
   fluidRow(
     column(width = 4, offset = 5,
-      selectInput("UF", HTML("Selecione o Estado: <span class='required-star'>*</span>"),
-                  choices = state),
-      numericInput("inicio", HTML("Digite o ano inicial: <span class='required-star'>*</span>"), value = NA, min = 1996, max = as.numeric(format(Sys.Date(), "%Y"))-1),
-      numericInput("fim", HTML("Digite o ano final :<span class='required-star'>*</span>"), value = NA, min = 1996, max = as.numeric(format(Sys.Date(), "%Y"))-1),
+      selectInput("UF", HTML("Selecione o Estado: <span class='required-star'>*</span>"), choices = state),
+
+      numericInput("inicio", HTML("Digite o ano inicial: <span class='required-star'>*</span>"), value = NA, min = 1996,
+                   max = as.numeric(format(Sys.Date(), "%Y"))-1),
+
+      numericInput("fim", HTML("Digite o ano final :<span class='required-star'>*</span>"), value = NA, min = 1996,
+                   max = as.numeric(format(Sys.Date(), "%Y"))-1),
+
       selectizeInput("Unidade", "Digite a Unidade de Estabelecimento:", choices = NULL,multiple = T,options = list(maxOptions = 180000)),
+
       downloadButton("downloadData", "Baixar Planilha", class = "btn btn-primary", target = "_blank")
     ),
 
@@ -51,7 +71,10 @@ ui <- fluidPage(
               tags$li("Clique no botão 'Baixar Planilha' para baixar a planilha dos arquivos."),
               tags$li("Os campos Estado, ano inicial e ano final são obrigatórios"),
               tags$li("O campo da Unidade de Estabelecimento é opcional, sendo que, quando não é preenchido, são baixados os dados do SINASC de todo o estado selecionado.")
-            ))
+            )),
+  tags$div(
+    style = "position: fixed; bottom: 0; width: 100%; padding: 10px; background-color: #f8f9fa; border-top: 2px solid #ddd; text-align: center;",
+    tags$p("© 2024 - Download Arquivos SINASC - DATASUS | Todos os direitos reservados | ",tags$a(href = "https://github.com/abelbrasil/PaNasc/", "Repositório no GitHub", target = "_blank")))
 )
 
 # Lógica do servidor
@@ -86,7 +109,12 @@ server <- function(input, output,session) {
   # Permitir download da tabela como CSV
     output$downloadData <- downloadHandler(
       filename = function() {
-        paste("SINASC_", input$UF,"_",input$inicio,"_",input$fim,"_",input$Unidade, ".xlsx", sep = "")
+        if(length(input$Unidade)==1){
+          paste("SINASC_", input$UF,"_",input$inicio,"_",input$fim,"_",input$Unidade, ".xlsx", sep = "")
+        }
+        else{
+          paste("SINASC_", input$UF,"_",input$inicio,"_",input$fim,".xlsx", sep = "")
+        }
       },
       content = function(file) {
         if (input$inicio == as.numeric(format(Sys.Date(), "%Y"))||input$fim == as.numeric(format(Sys.Date(), "%Y"))) {

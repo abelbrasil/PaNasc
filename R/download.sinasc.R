@@ -1,17 +1,19 @@
 #' Download SINASC
 #'
-#' Download data about live birth from SINASC - DATASUS and tranform from .dbc file to data frame
+#' Download data about live birth from SINASC - DATASUS and tranform from .dbc file to data frame.
 #' @param begin The year that start the files extract.
 #' @param end The year that finish the files extract. By default the last year. Can't be the current year.
 #' @param UF The state acronym.
 #' @param cod_mat The birth establishment code.
 #' @seealso \code{\link{label.sinasc}}
+#'
 #' @return A data frame with the filtered raw SINASC data.
 #' @author Luan Augusto, \email{luanguto87@gmail.com}
+#' @export
+#'
 #' @examples
 #' pe <- download.sinasc(2022,UF="PE")
 #' sp <- download.sinasc(2020,2022,"SP")
-#' @export
 download.sinasc <- function(begin,end,UF,cod_mat=""){
   require(read.dbc)
   require(dplyr)
@@ -38,6 +40,7 @@ download.sinasc <- function(begin,end,UF,cod_mat=""){
   if(is.numeric(cod_mat)){
     db <- db %>% filter(CODESTAB==cod_mat)
   }
-
+  db <- db %>%
+    left_join(get(paste0("ESTAB_",UF))%>% select(CNES, FANTASIA),by=join_by(CODESTAB==CNES),keep = F)
   return(db)
 }

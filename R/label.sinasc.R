@@ -163,7 +163,23 @@ label.sinasc <- function(x){
                                                                                 ifelse(base$CODOCUPMAE=="517315","Agente de segurança penitenciária",
                                                                                        ifelse(base$CODOCUPMAE=="510125","Chefe de cozinha",base$TITULO)))))))))))
   base <- base %>%
-    rename(OCUPMAE = TITULO, UF = SIGLA_UF, MUNICIPIO = MUNNOMEX, ANOMALIA = DESCR)
+    rename(OCUPMAE = TITULO, UF = SIGLA_UF, MUNICIPIO = MUNNOMEX, ANOMALIA = DESCR,ESTABELECIMENTO = FANTASIA)
+
+  base <- base %>%
+    mutate(FAIXA_PESO = case_when(
+      PESO>=4000 ~ "4000g e mais",
+      PESO<4000 ~ "3000g a 3999g",
+      PESO<3000 ~ "2500g a 2999g",
+      PESO<2500 ~ "1500g a 2499g",
+      PESO<1500 ~ "1000g a 1499g",
+      PESO<1000 ~ "0g a 999g",
+    ))
+
+  base <- base %>%
+    mutate(
+      ANO=year(DTNASC),MES_ANO=paste0(month(DTNASC),"-",year(DTNASC))
+    )
+
   base <- data.frame(lapply(base, function(x) if (is.factor(x)) as.character(x) else x))
 
   return(base)
