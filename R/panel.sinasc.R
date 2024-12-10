@@ -13,4 +13,3 @@ panel.sinasc <- function(x){
 
   return(base)
 }
-
