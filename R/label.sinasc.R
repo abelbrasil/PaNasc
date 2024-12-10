@@ -257,3 +257,4 @@ label.sinasc <- function(x){
 
   return(base)
 }
+

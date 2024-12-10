@@ -44,3 +44,4 @@ download.sinasc <- function(begin,end,UF,cod_mat=""){
     left_join(get(paste0("ESTAB_",UF))%>% select(CNES, FANTASIA),by=join_by(CODESTAB==CNES),keep = F)
   return(db)
 }
+
