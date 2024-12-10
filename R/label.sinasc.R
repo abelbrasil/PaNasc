@@ -22,7 +22,7 @@ label.sinasc <- function(x){
 
            LOCNASC=recode(LOCNASC,`1`="Hospital",`2`="Outros estabelecimentos de saúde",`3`="Domicílio",`4`="Outros",`5`="Aldeia Indígena",`9`="Ignorado"),
 
-           ESCMAE=recode(ESCMAE,`1`="Nenhuma",`2`="1 a 2 anos",`3`="4 a 7 anos",`4`="8 a 11 anos",`5`="12 e mais",`9`="Ignorado"),
+           ESCMAE=recode(ESCMAE,`1`="Nenhuma",`2`="1 a 2 anos",`3`="4 a 7 anos",`4`="8 a 11 anos",`5`="12 e mais",`9`="Ignorado",`0`="Ignorado"),
 
            ESCMAE2010=recode(ESCMAE2010,`0`="Sem escolaridade",`1`="Fundamental I (1ª a 4ª série)",
                              `2`="Fundamental II (5ª a 8º série)",`3`="Médio (antigo 2ª Grau)",
@@ -74,6 +74,10 @@ label.sinasc <- function(x){
 
            STDNNOVA=recode(STDNNOVA,`1`="Sim",`0`="Não",`9`="Ignorado"),
 
+           APGAR1=recode(APGAR1,`99`="Ignorado"),
+
+           APGAR5=recode(APGAR5,`99`="Ignorado"),
+
            TPROBSON=recode(TPROBSON,`01`="Nulípara, gest un, cefál >37sem, tp espontaneo",`02`="Nulípara, gest un, cefál >37sem c/ind CS préTP",
                              `03`="Multípara,(s/ces prev)gest un cef >37sem espon",`04`=" Multíp,(s/ces prev)gest un cef >37s ind/CSpréTP",`05`="C/CS ant gestação única, cefálica, > 37 semanas",
                              `06`="Todos partos pélvicos em nulíparas",`07`="Todos partos pélv em multíparas (incl CS prévia)",`08`="Todas gest múltiplas (incluindo CS prévia)",`09`="Todas apres anormais (incluindo CS prévia)",
@@ -124,10 +128,6 @@ label.sinasc <- function(x){
 
            CONSPRENAT=as.numeric(as.character(CONSPRENAT)),
 
-           APGAR1=as.numeric(as.character(APGAR1)),
-
-           APGAR5=as.numeric(as.character(APGAR5)),
-
            SERIESCMAE=as.numeric(as.character(SERIESCMAE)),
 
            NUMEROLOTE=as.numeric(as.character(NUMEROLOTE)),
@@ -142,6 +142,11 @@ label.sinasc <- function(x){
       left_join(CADMUN%>% select(MUNCOD,MUNNOMEX,UFCOD),TABUF%>% select(SIGLA_UF,CODIGO),by=join_by(UFCOD==CODIGO),keep = F),
       by=join_by(CODMUNRES==MUNCOD),keep = F
     )
+  base <- base %>%
+    rename(MUNRES=MUNNOMEX)
+
+  base <- base %>%
+    left_join(CADMUN%>% select(MUNCOD,MUNNOMEX),by=join_by(CODMUNNASC==MUNCOD),keep = FALSE)
 
   base$CODOCUPMAE <- gsub("^0+","",base$CODOCUPMAE)
 
@@ -163,16 +168,84 @@ label.sinasc <- function(x){
                                                                                 ifelse(base$CODOCUPMAE=="517315","Agente de segurança penitenciária",
                                                                                        ifelse(base$CODOCUPMAE=="510125","Chefe de cozinha",base$TITULO)))))))))))
   base <- base %>%
-    rename(OCUPMAE = TITULO, UF = SIGLA_UF, MUNICIPIO = MUNNOMEX, ANOMALIA = DESCR,ESTABELECIMENTO = FANTASIA)
+    rename(OCUPMAE = TITULO, UF = SIGLA_UF, MUNNASC = MUNNOMEX, ANOMALIA = DESCR,ESTABELECIMENTO = FANTASIA)
 
   base <- base %>%
     mutate(FAIXA_PESO = case_when(
       PESO>=4000 ~ "4000g e mais",
-      PESO<4000 ~ "3000g a 3999g",
-      PESO<3000 ~ "2500g a 2999g",
-      PESO<2500 ~ "1500g a 2499g",
-      PESO<1500 ~ "1000g a 1499g",
-      PESO<1000 ~ "0g a 999g",
+      PESO>=3000 & PESO<4000 ~ "3000g a 3999g",
+      PESO>=2500 & PESO<3000 ~ "2500g a 2999g",
+      PESO>=1500 & PESO<2500 ~ "1500g a 2499g",
+      PESO>=1000 & PESO<1500 ~ "1000g a 1499g",
+      PESO<1000 ~ "0g a 999g"
+    ))
+
+  base <- base %>%
+    mutate(FAIXA_ETARIA_MAE = case_when(
+      IDADEMAE>=51 ~ "51 anos ou mais",
+      IDADEMAE>=41 & IDADEMAE<51 ~ "41 a 50 anos",
+      IDADEMAE>=31 & IDADEMAE<41 ~ "31 a 40 anos",
+      IDADEMAE>=21 & IDADEMAE<31 ~ "21 a 30 anos",
+      IDADEMAE>=15 & IDADEMAE<21 ~ "15 a 20 anos",
+      IDADEMAE<15 ~ "menos de 15 anos"
+    ))
+
+  base <- base %>%
+    mutate(COD_FAIXA_ETARIA=case_when(
+      IDADEMAE>=51 ~ 6,
+      IDADEMAE>=41 & IDADEMAE<51 ~ 5,
+      IDADEMAE>=31 & IDADEMAE<41 ~ 4,
+      IDADEMAE>=21 & IDADEMAE<31 ~ 3,
+      IDADEMAE>=15 & IDADEMAE<21 ~ 2,
+      IDADEMAE<15 ~ 1
+    ))
+
+  base <- base %>%
+    mutate(COD_FAIXA_PESO = case_when(
+      PESO>=4000 ~ 6,
+      PESO>=3000 & PESO<4000 ~ 5,
+      PESO>=2500 & PESO<3000 ~ 4,
+      PESO>=1500 & PESO<2500 ~ 3,
+      PESO>=1000 & PESO<1500 ~ 2,
+      PESO<1000 ~ 1
+    ))
+
+  base <- base %>%
+    mutate(COD_GESTACAO = case_when(
+      GESTACAO=="Ignorado" ~ 7,
+      GESTACAO=="42 semanas e mais" ~ 6,
+      GESTACAO=="37 a 41 semanas" ~ 5,
+      GESTACAO=="32 a 36 semanas" ~ 4,
+      GESTACAO=="28 a 31 semanas" ~ 3,
+      GESTACAO=="22 a 27 semanas" ~ 2,
+      GESTACAO=="Menos de 22 semanas" ~ 1
+    ))
+
+  base <- base %>%
+    mutate(COD_CONSULTAS = case_when(
+      CONSULTAS=="Ignorado" ~ 5,
+      CONSULTAS=="7 e mais" ~ 4,
+      CONSULTAS=="de 4 a 6" ~ 3,
+      CONSULTAS=="de 1 a 3" ~ 2,
+      CONSULTAS=="Nenhuma" ~ 1
+    ))
+
+  base <- base %>%
+    mutate(COD_ESCOLARIDADE = case_when(
+      ESCMAE=="Ignorado" ~ 6,
+      ESCMAE=="12 e mais" ~ 5,
+      ESCMAE=="8 a 11 anos" ~ 4,
+      ESCMAE=="4 a 7 anos" ~ 3,
+      ESCMAE=="1 a 2 anos" ~ 2,
+      ESCMAE=="Nenhuma" ~ 1
+    ))
+
+  base <- base %>%
+    mutate(COD_GRAVIDEZ = case_when(
+      GRAVIDEZ=="Ignorado" ~ 4,
+      GRAVIDEZ=="Tripla e mais" ~ 3,
+      GRAVIDEZ=="Dupla" ~ 2,
+      GRAVIDEZ=="Única" ~ 1
     ))
 
   base <- base %>%
