@@ -1,8 +1,8 @@
 #' Download SINASC
 #'
 #' Download data about live birth from SINASC - DATASUS and tranform from .dbc file to data frame.
-#' @param begin The year that start the files extract.
-#' @param end The year that finish the files extract. By default the last year. Can't be the current year.
+#' @param inicio The year that start the files extract.
+#' @param fim The year that finish the files extract. By default the last year. Can't be the current year.
 #' @param UF The state acronym.
 #' @param cod_mat The birth establishment code.
 #' @seealso \code{\link{label.sinasc}}
@@ -14,15 +14,23 @@
 #' @examples
 #' pe <- download.sinasc(2022,UF="PE")
 #' sp <- download.sinasc(2020,2022,"SP")
-download.sinasc <- function(begin,end,UF,cod_mat=""){
+download.sinasc <- function(inicio,fim,UF,cod_mat=""){
   require(read.dbc)
   require(dplyr)
+  require(lubridate)
+
   urls <- c()
+
   db <- c()
-  if (end==as.numeric(format(Sys.Date(), "%Y"))){
+
+  cod_mat <- as.character(cod_mat)
+
+  ESTAB <- c()
+
+  if (fim==as.numeric(format(Sys.Date(), "%Y"))){
     stop("Error: Not is possible download file of the current year")
   }
-  anos <- c(begin:end)
+  anos <- c(inicio:fim)
   for (i in anos) {
     if(i==as.numeric(format(Sys.Date(), "%Y"))-1){
       url <- paste0("ftp://ftp.datasus.gov.br/dissemin/publicos/SINASC/PRELIM/DNRES/","DN",UF,i,".dbc")
@@ -37,11 +45,63 @@ download.sinasc <- function(begin,end,UF,cod_mat=""){
     data <- read.dbc(temp)
     db <- bind_rows(db,data)
   }
-  if(is.numeric(cod_mat)){
-    db <- db %>% filter(CODESTAB==cod_mat)
+
+  db <- db %>%
+    mutate(
+      DTNASC=dmy(DTNASC),
+
+      DTNASCMAE=dmy(DTNASCMAE),
+
+      DTCADASTRO=dmy(DTCADASTRO),
+
+      DTRECORIGA=dmy(DTRECORIGA),
+
+      DTRECEBIM=dmy(DTRECEBIM),
+
+      DTDECLARAC=dmy(DTDECLARAC),
+
+      DTULTMENST=dmy(DTULTMENST),
+
+      HORANASC=paste0(substr(HORANASC,1,2),":", substr(HORANASC,3,4)),
+
+      IDADEMAE=as.numeric(as.character(IDADEMAE)),
+
+      QTDFILVIVO=as.numeric(as.character(QTDFILVIVO)),
+
+      QTDFILMORT=as.numeric(as.character(QTDFILMORT)),
+
+      QTDFILMORT=as.numeric(as.character(QTDFILMORT)),
+
+      PESO=as.numeric(as.character(PESO)),
+
+      QTDGESTANT=as.numeric(as.character(QTDGESTANT)),
+
+      QTDPARTNOR=as.numeric(as.character(QTDPARTNOR)),
+
+      QTDPARTCES=as.numeric(as.character(QTDPARTCES)),
+
+      CONSPRENAT=as.numeric(as.character(CONSPRENAT)),
+
+      DIFDATA=as.numeric(as.character(DIFDATA)),
+
+      CONSPRENAT=as.numeric(as.character(CONSPRENAT)),
+
+      SERIESCMAE=as.numeric(as.character(SERIESCMAE)),
+
+      NUMEROLOTE=as.numeric(as.character(NUMEROLOTE)),
+
+      SEMAGESTAC=as.numeric(as.character(SEMAGESTAC)))
+
+  db <- data.frame(lapply(db, function(x) if (is.factor(x)) as.character(x) else x))
+
+  ifelse(cod_mat %in% db$CODESTAB,db <- db %>% filter(CODESTAB %in% cod_mat),db)
+
+  for (i in UF) {
+    est <- get(paste0("ESTAB_",i))
+    ESTAB <- bind_rows(ESTAB,est)
   }
   db <- db %>%
-    left_join(get(paste0("ESTAB_",UF))%>% select(CNES, FANTASIA),by=join_by(CODESTAB==CNES),keep = F)
+    left_join(ESTAB%>% select(CNES, FANTASIA),by=join_by(CODESTAB==CNES),keep = F)
+
   return(db)
 }
-

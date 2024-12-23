@@ -88,51 +88,7 @@ label.sinasc <- function(x){
            KOTELCHUCK=recode(KOTELCHUCK,`1`="Não fez pré-natal",`2`="Inadequado",`3`="Intermediário",`4`="Adequado",
                              `5`="Mais que adequado",`6`="Não Classificados",`9`="Ignorado"),
 
-           ORIGEM=recode(ORIGEM,`1`="Oracle",`2`="FTP",`3`="SEAD"),
-
-           DTNASC=dmy(DTNASC),
-
-           DTNASCMAE=dmy(DTNASCMAE),
-
-           DTCADASTRO=dmy(DTCADASTRO),
-
-           DTRECORIGA=dmy(DTRECORIGA),
-
-           DTRECEBIM=dmy(DTRECEBIM),
-
-           DTDECLARAC=dmy(DTDECLARAC),
-
-           DTULTMENST=dmy(DTULTMENST),
-
-           HORANASC=paste0(substr(HORANASC,1,2),":", substr(HORANASC,3,4)),
-
-           IDADEMAE=as.numeric(as.character(IDADEMAE)),
-
-           QTDFILVIVO=as.numeric(as.character(QTDFILVIVO)),
-
-           QTDFILMORT=as.numeric(as.character(QTDFILMORT)),
-
-           QTDFILMORT=as.numeric(as.character(QTDFILMORT)),
-
-           PESO=as.numeric(as.character(PESO)),
-
-           QTDGESTANT=as.numeric(as.character(QTDGESTANT)),
-
-           QTDPARTNOR=as.numeric(as.character(QTDPARTNOR)),
-
-           QTDPARTCES=as.numeric(as.character(QTDPARTCES)),
-
-           CONSPRENAT=as.numeric(as.character(CONSPRENAT)),
-
-           DIFDATA=as.numeric(as.character(DIFDATA)),
-
-           CONSPRENAT=as.numeric(as.character(CONSPRENAT)),
-
-           SERIESCMAE=as.numeric(as.character(SERIESCMAE)),
-
-           NUMEROLOTE=as.numeric(as.character(NUMEROLOTE)),
-
-           SEMAGESTAC=as.numeric(as.character(SEMAGESTAC)))
+           ORIGEM=recode(ORIGEM,`1`="Oracle",`2`="FTP",`3`="SEAD"))
 
   base <- base %>%
     left_join(CID10%>% select(CID10, DESCR),by=join_by(CODANOMAL==CID10),keep = FALSE)
@@ -249,12 +205,23 @@ label.sinasc <- function(x){
     ))
 
   base <- base %>%
+    mutate(FAIXA_APGAR5 = case_when(
+      APGAR5 %in% c("00","01","02","03") ~ "0 a 3",
+      APGAR5 %in% c("04","05","06","07") ~ "4 a 7",
+      APGAR5 %in% c("08","09","10") ~ "8 a 10",
+      APGAR5 == "Ignorado" ~ "Ignorado"
+    ))
+
+  base <- base %>%
     mutate(
-      ANO=year(DTNASC),MES_ANO=paste0(month(DTNASC),"-",year(DTNASC))
+      ANO=year(DTNASC),MES_ANO=paste0(year(DTNASC),"-",month(DTNASC),"-","01")
     )
 
-  base <- data.frame(lapply(base, function(x) if (is.factor(x)) as.character(x) else x))
+  base <- base %>%
+    mutate(
+      ANO=as.character(ANO),MES_ANO=as.Date(MES_ANO))
 
+  base <- data.frame(lapply(base, function(x) if (is.factor(x)) as.character(x) else x))
   return(base)
 }
 

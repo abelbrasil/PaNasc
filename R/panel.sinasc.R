@@ -1,9 +1,25 @@
 panel.sinasc <- function(x){
   require(dplyr)
   base <- x %>%
-    select(CODESTAB,ESTABELECIMENTO,`LOCAL DE NASCIMENTO`=LOCNASC,CODMUNNASC,UF,`MUNICÍPIO DE NASCIMENTO`=MUNNASC,SEXO,PESO,`FAIXA DE PESO`=FAIXA_PESO,`SEMANAS GESTAÇÃO`=SEMAGESTAC,`GESTAÇÃO`=GESTACAO,GRAVIDEZ,PARTO,DTNASC,HORANASC,ANO,`MES-ANO`=MES_ANO,`RAÇA/COR`=RACACOR,`CONSULTAS PRÉ-NATAL`=CONSULTAS, APGAR1, APGAR5,
-           `IDADE DA MÃE`= IDADEMAE,`FAIXA ETÁRIA DA MÃE`=FAIXA_ETARIA_MAE,`ESTADO CIVIL DA MÃE` = ESTCIVMAE,`RAÇA/COR DA MÃE`=RACACORMAE, `ESCOLARIDADE DA MÃE` = ESCMAE2010, `ANOS DE ESCOLARIDADE DA MÃE` = ESCMAE, CODMUNRES,`MUNICÍPIO RESIDENCIA MÃE`= MUNRES,`OCUPAÇÃO DA MÃE`=OCUPMAE,
-           `ANOMALIA CONGÊNITA`=IDANOMAL,COD_FAIXA_ETARIA,COD_FAIXA_PESO,COD_GESTACAO,COD_CONSULTAS,COD_ESCOLARIDADE,COD_GRAVIDEZ)
+    select(`Código do Estabelecimento`=CODESTAB,`Estabelecimento`=ESTABELECIMENTO,`Local de Nascimento`=LOCNASC,
+
+           `Código Município de Nascimento`=CODMUNNASC,UF,`Município de Nascimento`=MUNNASC,`Sexo`=SEXO,`Peso`=PESO,
+
+           `Faixa de Peso`=FAIXA_PESO,`Semanas de Gestação`=SEMAGESTAC,`Gestação`=GESTACAO,`Gravidez`=GRAVIDEZ,`Parto`=PARTO,
+
+           `Data de Nascimento`=DTNASC,`Hora de Nascimento`=HORANASC,`Ano`=ANO,`Mês-Ano`=MES_ANO,`Raça/Cor`=RACACOR,
+
+           `Consultas Pré-Natal`=CONSULTAS, APGAR1, APGAR5,`Faixa APGAR5`=FAIXA_APGAR5,`Idade da Mãe`= IDADEMAE,
+
+           `Faixa Etária da Mãe`=FAIXA_ETARIA_MAE,`Estado Civil da Mãe` = ESTCIVMAE,`Raça/Cor da Mãe`=RACACORMAE,
+
+           `Escolaridade da Mãe` = ESCMAE2010,`Anos de Escolaridade da Mãe` = ESCMAE, `Código Município de Residência`=CODMUNRES,
+
+           `Município de Residência da Mãe`= MUNRES,`Ocupação da Mãe`=OCUPMAE,`Anomalia Congênita`=IDANOMAL,
+
+           `Código Faixa Etária`=COD_FAIXA_ETARIA,`Código Faixa Peso`=COD_FAIXA_PESO,`Código Gestação`=COD_GESTACAO,
+
+           `Código Consultas`=COD_CONSULTAS, `Código Escolaridade`=COD_ESCOLARIDADE,`Código Gravidez`=COD_GRAVIDEZ)
 
   colnames(base) <- iconv(colnames(base), to = "UTF-8")
 
