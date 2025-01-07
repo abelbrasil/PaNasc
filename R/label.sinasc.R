@@ -96,13 +96,16 @@ label.sinasc <- function(x){
   base <- base %>%
     left_join(
       left_join(CADMUN%>% select(MUNCOD,MUNNOMEX,UFCOD),TABUF%>% select(SIGLA_UF,CODIGO),by=join_by(UFCOD==CODIGO),keep = F),
-      by=join_by(CODMUNNASC==MUNCOD),keep = F
+      by=join_by(CODMUNRES==MUNCOD),keep = F
     )
   base <- base %>%
-    rename(MUNRES=MUNNOMEX)
+    rename(MUNRES=MUNNOMEX,UFRES=SIGLA_UF)
 
   base <- base %>%
-    left_join(CADMUN%>% select(MUNCOD,MUNNOMEX),by=join_by(CODMUNNASC==MUNCOD),keep = FALSE)
+    left_join(
+      left_join(CADMUN%>% select(MUNCOD,MUNNOMEX,UFCOD),TABUF%>% select(SIGLA_UF,CODIGO),by=join_by(UFCOD==CODIGO),keep = F),
+      by=join_by(CODMUNNASC==MUNCOD),keep = F
+    )
 
   base$CODOCUPMAE <- gsub("^0+","",base$CODOCUPMAE)
 
@@ -124,7 +127,7 @@ label.sinasc <- function(x){
                                                                                 ifelse(base$CODOCUPMAE=="517315","Agente de segurança penitenciária",
                                                                                        ifelse(base$CODOCUPMAE=="510125","Chefe de cozinha",base$TITULO)))))))))))
   base <- base %>%
-    rename(OCUPMAE = TITULO, UF = SIGLA_UF, MUNNASC = MUNNOMEX, ANOMALIA = DESCR,ESTABELECIMENTO = FANTASIA)
+    rename(OCUPMAE = TITULO, UFNASC = SIGLA_UF, MUNNASC = MUNNOMEX, ANOMALIA = DESCR,ESTABELECIMENTO = FANTASIA)
 
   base <- base %>%
     mutate(FAIXA_PESO = case_when(
@@ -222,12 +225,22 @@ label.sinasc <- function(x){
       ANO=as.character(ANO),MES_ANO=as.Date(MES_ANO))
 
   base <- base %>%
-    mutate(REGIAO = case_when(
-      UF %in% c("AC", "AP", "AM", "PA", "RO", "RR", "TO") ~ "Norte",
-      UF %in% c("AL", "BA", "CE", "MA", "PB", "PE", "PI", "RN", "SE") ~ "Nordeste",
-      UF %in% c("ES", "MG", "RJ", "SP") ~ "Sudeste",
-      UF %in% c("PR", "RS", "SC") ~ "Sul",
-      UF %in% c("DF", "GO", "MT", "MS") ~ "Centro-Oeste",
+    mutate(REGIAO_NASC = case_when(
+      UFNASC %in% c("AC", "AP", "AM", "PA", "RO", "RR", "TO") ~ "Norte",
+      UFNASC %in% c("AL", "BA", "CE", "MA", "PB", "PE", "PI", "RN", "SE") ~ "Nordeste",
+      UFNASC %in% c("ES", "MG", "RJ", "SP") ~ "Sudeste",
+      UFNASC %in% c("PR", "RS", "SC") ~ "Sul",
+      UFNASC %in% c("DF", "GO", "MT", "MS") ~ "Centro-Oeste",
+      TRUE ~ "Desconhecido" # Caso algum UF não esteja mapeado
+    ))
+
+  base <- base %>%
+    mutate(REGIAO_RES = case_when(
+      UFRES %in% c("AC", "AP", "AM", "PA", "RO", "RR", "TO") ~ "Norte",
+      UFRES %in% c("AL", "BA", "CE", "MA", "PB", "PE", "PI", "RN", "SE") ~ "Nordeste",
+      UFRES %in% c("ES", "MG", "RJ", "SP") ~ "Sudeste",
+      UFRES %in% c("PR", "RS", "SC") ~ "Sul",
+      UFRES %in% c("DF", "GO", "MT", "MS") ~ "Centro-Oeste",
       TRUE ~ "Desconhecido" # Caso algum UF não esteja mapeado
     ))
 

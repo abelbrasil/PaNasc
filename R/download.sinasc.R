@@ -25,8 +25,6 @@ download.sinasc <- function(inicio,fim,UF,cod_mat=""){
 
   cod_mat <- as.character(cod_mat)
 
-  ESTAB <- c()
-
   if (fim==as.numeric(format(Sys.Date(), "%Y"))){
     stop("Error: Not is possible download file of the current year")
   }
@@ -96,10 +94,7 @@ download.sinasc <- function(inicio,fim,UF,cod_mat=""){
 
   ifelse(cod_mat %in% db$CODESTAB,db <- db %>% filter(CODESTAB %in% cod_mat),db)
 
-  for (i in UF) {
-    est <- get(paste0("ESTAB_",i))
-    ESTAB <- bind_rows(ESTAB,est)
-  }
+
   db <- db %>%
     left_join(ESTAB%>% select(CNES, FANTASIA),by=join_by(CODESTAB==CNES),keep = F)
 

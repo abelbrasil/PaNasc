@@ -11,7 +11,7 @@ panel.sinasc <- function(x){
   base <- x %>%
     select(`Código do Estabelecimento`=CODESTAB,`Estabelecimento`=ESTABELECIMENTO,`Local de Nascimento`=LOCNASC,
 
-           `Código Município de Nascimento`=CODMUNNASC,UF,`Região`=REGIAO,`Vínculo`=VINCULO,`Município de Nascimento`=MUNNASC,
+           `Código Município de Nascimento`=CODMUNNASC,`UF de Nascimento`=UFNASC,`Região de Nascimento`=REGIAO_NASC,`Vínculo`=VINCULO,`Município de Nascimento`=MUNNASC,
 
            `Sexo`=SEXO,`Peso`=PESO,`Faixa de Peso`=FAIXA_PESO,`Semanas de Gestação`=SEMAGESTAC,`Gestação`=GESTACAO,`Gravidez`=GRAVIDEZ,
 
@@ -23,7 +23,7 @@ panel.sinasc <- function(x){
 
            `Escolaridade da Mãe` = ESCMAE2010,`Anos de Escolaridade da Mãe` = ESCMAE, `Código Município de Residência`=CODMUNRES,
 
-           `Município de Residência da Mãe`= MUNRES,`Ocupação da Mãe`=OCUPMAE,`Anomalia Congênita`=IDANOMAL,
+           `Município de Residência da Mãe`= MUNRES,`UF de Residência da Mãe`=UFRES,`Região de Residência da Mãe`=REGIAO_RES,`Ocupação da Mãe`=OCUPMAE,`Anomalia Congênita`=IDANOMAL,
 
            `Código Faixa Etária`=COD_FAIXA_ETARIA,`Código Faixa Peso`=COD_FAIXA_PESO,`Código Gestação`=COD_GESTACAO,
 
@@ -31,7 +31,7 @@ panel.sinasc <- function(x){
 
   colnames(base) <- iconv(colnames(base), to = "UTF-8")
 
-  base[-33] <- lapply(base[-33], function(col) {
+  base[-35] <- lapply(base[-35], function(col) {
     if (is.character(col)) iconv(col, to = "UTF-8") else col
   })
 
