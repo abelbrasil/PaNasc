@@ -14,6 +14,7 @@ label.sinasc <- function(x){
   require(foreign)
   require(dplyr)
   require(lubridate)
+  require(tidyr)
   base <- x
 
 
@@ -90,22 +91,46 @@ label.sinasc <- function(x){
 
            ORIGEM=recode(ORIGEM,`1`="Oracle",`2`="FTP",`3`="SEAD"))
 
+  base <- data.frame(lapply(base, function(x) if (is.factor(x)) as.character(x) else x))
+
+  base <- base %>%
+    mutate(CODUFNASC = substring(CODMUNNASC,1,2))
+
+  base <- base %>%
+    mutate(CODUFRES = substring(CODMUNRES,1,2))
+
+  base$CODUFNASC <- as.integer(base$CODUFNASC)
+
+  base$CODMUNNASC <- as.integer(base$CODMUNNASC)
+
+  base$CODUFRES <- as.integer(base$CODUFRES)
+
+  base$CODMUNRES <- as.integer(base$CODMUNRES)
+
   base <- base %>%
     left_join(CID10%>% select(CID10, DESCR),by=join_by(CODANOMAL==CID10),keep = FALSE)
 
   base <- base %>%
-    left_join(
-      left_join(CADMUN%>% select(MUNCOD,MUNNOMEX,UFCOD),TABUF%>% select(SIGLA_UF,CODIGO),by=join_by(UFCOD==CODIGO),keep = F),
-      by=join_by(CODMUNRES==MUNCOD),keep = F
-    )
-  base <- base %>%
-    rename(MUNRES=MUNNOMEX,UFRES=SIGLA_UF)
+    left_join(TABUF%>% select(SIGLA_UF,CODIGO),by=join_by(CODUFNASC==CODIGO),keep = F)
 
   base <- base %>%
-    left_join(
-      left_join(CADMUN%>% select(MUNCOD,MUNNOMEX,UFCOD),TABUF%>% select(SIGLA_UF,CODIGO),by=join_by(UFCOD==CODIGO),keep = F),
-      by=join_by(CODMUNNASC==MUNCOD),keep = F
-    )
+    rename(UFNASC=SIGLA_UF)
+
+  base <- base %>%
+    left_join(TABUF%>% select(SIGLA_UF,CODIGO),by=join_by(CODUFRES==CODIGO),keep = F)
+
+  base <- base %>%
+    rename(UFRES=SIGLA_UF)
+
+
+  base <- base %>%
+    left_join(CADMUN%>% select(MUNCOD,MUNNOMEX),by=join_by(CODMUNRES==MUNCOD),keep = F)
+
+  base <- base %>%
+    rename(MUNRES=MUNNOMEX)
+
+  base <- base %>%
+    left_join(CADMUN%>% select(MUNCOD,MUNNOMEX),by=join_by(CODMUNNASC==MUNCOD),keep = F)
 
   base$CODOCUPMAE <- gsub("^0+","",base$CODOCUPMAE)
 
@@ -127,7 +152,7 @@ label.sinasc <- function(x){
                                                                                 ifelse(base$CODOCUPMAE=="517315","Agente de segurança penitenciária",
                                                                                        ifelse(base$CODOCUPMAE=="510125","Chefe de cozinha",base$TITULO)))))))))))
   base <- base %>%
-    rename(OCUPMAE = TITULO, UFNASC = SIGLA_UF, MUNNASC = MUNNOMEX, ANOMALIA = DESCR,ESTABELECIMENTO = FANTASIA)
+    rename(OCUPMAE = TITULO, MUNNASC = MUNNOMEX, ANOMALIA = DESCR,ESTABELECIMENTO = FANTASIA)
 
   base <- base %>%
     mutate(FAIXA_PESO = case_when(
@@ -223,6 +248,13 @@ label.sinasc <- function(x){
   base <- base %>%
     mutate(
       ANO=as.character(ANO),MES_ANO=as.Date(MES_ANO))
+
+  base$UFNASC[is.na(base$UFNASC)]="Desconhecido"
+
+  base$MUNNASC[is.na(base$MUNNASC)]="Desconhecido"
+
+  base$MUNRES[is.na(base$MUNRES)]="Desconhecido"
+
 
   base <- base %>%
     mutate(REGIAO_NASC = case_when(
