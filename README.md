@@ -18,6 +18,8 @@ This package is one of the main activities of the EBSERH Technology Initiation S
 
 -   `label.sinasc` needs a data frame created by the function `download.sinasc` and this function is responsible to choose the util columns, clean the data and replace the code by the respective labels.
 
+-   `panel.sinasc` is used to select and handle the columns required for the Power BI dashboard.
+
 ## Installation
 
 The package can be installed using the `devtools` library:
