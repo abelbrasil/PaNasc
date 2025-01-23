@@ -14,7 +14,7 @@
 #' @examples
 #' pe <- download.sinasc(2022,UF="PE")
 #' sp <- download.sinasc(2020,2022,"SP")
-download.sinasc <- function(inicio,fim,UF,cod_mat=""){
+download.sinasc <- function(inicio,fim,UF="all",cod_mat=""){
   require(read.dbc)
   require(dplyr)
   require(lubridate)
@@ -25,16 +25,26 @@ download.sinasc <- function(inicio,fim,UF,cod_mat=""){
 
   cod_mat <- as.character(cod_mat)
 
+
+
   if (fim==as.numeric(format(Sys.Date(), "%Y"))){
     stop("Error: Not is possible download file of the current year")
   }
   anos <- c(inicio:fim)
   for (i in anos) {
     if(i==as.numeric(format(Sys.Date(), "%Y"))-1){
-      url <- paste0("ftp://ftp.datasus.gov.br/dissemin/publicos/SINASC/PRELIM/DNRES/","DN",UF,i,".dbc")
+      if (UF=="all"){
+        url <- paste0("ftp://ftp.datasus.gov.br/dissemin/publicos/SINASC/PRELIM/DNRES/","DN",TABUF$SIGLA_UF,i,".dbc")
+      }
+      else
+        url <- paste0("ftp://ftp.datasus.gov.br/dissemin/publicos/SINASC/PRELIM/DNRES/","DN",UF,i,".dbc")
     }
     else
-      url <- paste0("ftp://ftp.datasus.gov.br/dissemin/publicos/SINASC/1996_/Dados/DNRES/","DN",UF,i,".dbc")
+      if (UF=="all"){
+        url <- paste0("ftp://ftp.datasus.gov.br/dissemin/publicos/SINASC/PRELIM/DNRES/","DN",TABUF$SIGLA_UF,i,".dbc")
+      }
+      else
+        url <- paste0("ftp://ftp.datasus.gov.br/dissemin/publicos/SINASC/1996_/Dados/DNRES/","DN",UF,i,".dbc")
     urls <- append(urls,url)
   }
   for (i in 1:length(urls)) {
