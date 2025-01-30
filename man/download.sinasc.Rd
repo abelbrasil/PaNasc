@@ -4,7 +4,7 @@
 \alias{download.sinasc}
 \title{Download SINASC}
 \usage{
-download.sinasc(inicio, fim, UF, cod_mat = "")
+download.sinasc(inicio, fim, UF="all", cod_mat = "")
 }
 \arguments{
 \item{inicio}{The year that start the files extract.}
