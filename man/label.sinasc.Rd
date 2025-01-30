@@ -17,7 +17,7 @@ The function download.sinasc create a data frame about the SINASC data with no t
 treatment of the data and replace the codes by respective labels.
 }
 \seealso{
-\code{\link{download.sinasc}}
+\code{\link{download.sinasc} \link{panel.sinasc}}
 }
 \author{
 Luan Augusto, \email{luanguto87@gmail.com}
