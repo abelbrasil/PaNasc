@@ -14,7 +14,6 @@ process.sinasc <- function(data){
   require(foreign)
   require(dplyr)
   require(lubridate)
-  require(data)
   base <- data
 
 
