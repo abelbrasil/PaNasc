@@ -17,7 +17,7 @@ The function label.sinasc treat the data frame about the SINASC after download w
 But many columns are unnecessary for the Power BI Dashboard, so this function select the columns needed and reat the columns names.
 }
 \seealso{
-\code{\link{download.sinasc} \link{label.sinasc}}
+\code{\link{download.sinasc} \link{process.sinasc}}
 }
 \author{
 Luan Augusto, \email{luanguto87@gmail.com}

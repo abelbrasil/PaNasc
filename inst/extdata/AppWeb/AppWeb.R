@@ -41,7 +41,7 @@ ui <- fluidPage(
 
   fluidRow(
     column(width = 4, offset = 5,
-      selectInput("UF", HTML("Selecione o Estado: <span class='required-star'>*</span>"), choices = state),
+      selectInput("UF", HTML("Selecione o Estado: <span class='required-star'>*</span>"), choices = state,multiple = T),
 
       numericInput("inicio", HTML("Digite o ano inicial: <span class='required-star'>*</span>"), value = NA, min = 1996,
                    max = as.numeric(format(Sys.Date(), "%Y"))-1),
@@ -83,7 +83,8 @@ server <- function(input, output,session) {
   # Filtrar os estabelecimentos de acordo com o estado selecionado
   observeEvent(input$UF, {
     # Filtrar os municípios com base no estado selecionado
-    estab_UF <- get(paste0("ESTAB_",input$UF))
+    estab_UF <- ESTAB %>%
+      filter(UF %in% input$UF)
     estab <- paste0(estab_UF$CNES," - ",estab_UF$FANTASIA)
 
     # Atualizar as opções do segundo selectInput
@@ -102,7 +103,7 @@ server <- function(input, output,session) {
     }
     # Criação de um data frame com base nas entradas do usuário
     data <- download.sinasc(input$inicio,input$fim,input$UF,codigo)
-    data <- label.sinasc(data)
+    data <- process.sinasc(data)
     data
   })
 

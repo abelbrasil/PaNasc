@@ -26,7 +26,7 @@ pe <- download.sinasc(2022,UF="PE")
 sp <- download.sinasc(2020,2022,"SP")
 }
 \seealso{
-\code{\link{label.sinasc} \link{panel.sinasc}}
+\code{\link{process.sinasc} \link{panel.sinasc}}
 }
 \author{
 Luan Augusto, \email{luanguto87@gmail.com}
