@@ -3,7 +3,7 @@ if (!require("read.dbc")) {
   library(read.dbc)
 }
 library(devtools)
-install_github("abelbrasil/PaNasc", auth_token = "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")
+install_github("abelbrasil/PaNasc", auth_token = "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")
 library(PaNasc)
 library(shiny)
 library(shinyjs)
@@ -74,7 +74,7 @@ ui <- fluidPage(
             )),
   tags$div(
     style = "position: fixed; bottom: 0; width: 100%; padding: 10px; background-color: #f8f9fa; border-top: 2px solid #ddd; text-align: center;",
-    tags$p("© 2024 - Download Arquivos SINASC - DATASUS | Todos os direitos reservados | ",tags$a(href = "https://github.com/abelbrasil/PaNasc/", "Repositório no GitHub", target = "_blank")))
+    tags$p("© 2025 - Download Arquivos SINASC - DATASUS | Todos os direitos reservados | ",tags$a(href = "https://github.com/abelbrasil/PaNasc/", "Repositório GitHub", target = "_blank")))
 )
 
 # Lógica do servidor
@@ -102,9 +102,9 @@ server <- function(input, output,session) {
       codigo<-as.numeric(codigo)
     }
     # Criação de um data frame com base nas entradas do usuário
-    data <- download.sinasc(input$inicio,input$fim,input$UF,codigo)
-    data <- process.sinasc(data)
-    data
+    df <- download.sinasc(input$inicio,input$fim,input$UF,codigo)
+    df <- process.sinasc(df)
+    df
   })
 
   # Permitir download da tabela como CSV

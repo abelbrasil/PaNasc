@@ -4,7 +4,7 @@
 #' @param inicio The year that start the files extract.
 #' @param fim The year that finish the files extract. By default the last year. Can't be the current year.
 #' @param UF The state acronym.
-#' @param cod_mat The birth establishment code.
+#' @param cod_estab The birth establishment code.
 #' @seealso \code{\link{label.sinasc}}
 #'
 #' @return A data frame with the filtered raw SINASC data.
@@ -14,7 +14,7 @@
 #' @examples
 #' pe <- download.sinasc(2022,UF="PE")
 #' sp <- download.sinasc(2020,2022,"SP")
-download.sinasc <- function(inicio,fim,UF="all",cod_mat=""){
+download.sinasc <- function(inicio,fim,UF="all",cod_estab=""){
   require(read.dbc)
   require(dplyr)
   require(lubridate)
