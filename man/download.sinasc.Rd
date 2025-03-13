@@ -13,7 +13,7 @@ download.sinasc(inicio, fim, UF="all", cod_estab = "")
 
 \item{UF}{The state acronym.}
 
-\item{cod_mat}{The birth establishment code.}
+\item{cod_estab}{The birth establishment code.}
 }
 \value{
 A data frame with the filtered raw SINASC data.

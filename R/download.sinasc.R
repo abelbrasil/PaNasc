@@ -23,7 +23,7 @@ download.sinasc <- function(inicio,fim,UF="all",cod_estab=""){
 
   db <- c()
 
-  cod_mat <- as.character(cod_mat)
+  cod_estab <- as.character(cod_estab)
 
 
 
@@ -102,7 +102,7 @@ download.sinasc <- function(inicio,fim,UF="all",cod_estab=""){
 
   db <- data.frame(lapply(db, function(x) if (is.factor(x)) as.character(x) else x))
 
-  ifelse(cod_mat %in% db$CODESTAB,db <- db %>% filter(CODESTAB %in% cod_mat),db)
+  ifelse(cod_estab %in% db$CODESTAB,db <- db %>% filter(CODESTAB %in% cod_estab),db)
 
 
   db <- db %>%
