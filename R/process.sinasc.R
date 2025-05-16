@@ -22,7 +22,7 @@ process.sinasc <- function(data){
 
            LOCNASC=recode(LOCNASC,`1`="Hospital",`2`="Outros estabelecimentos de saúde",`3`="Domicílio",`4`="Outros",`5`="Aldeia Indígena",`9`="Ignorado"),
 
-           ESCMAE=recode(ESCMAE,`1`="Nenhuma",`2`="1 a 2 anos",`3`="4 a 7 anos",`4`="8 a 11 anos",`5`="12 e mais",`9`="Ignorado",`0`="Ignorado"),
+           ESCMAE=recode(ESCMAE,`1`="Nenhuma",`2`="1 a 3 anos",`3`="4 a 7 anos",`4`="8 a 11 anos",`5`="12 e mais",`9`="Ignorado",`0`="Ignorado"),
 
            ESCMAE2010=recode(ESCMAE2010,`0`="Sem escolaridade",`1`="Fundamental I (1ª a 4ª série)",
                              `2`="Fundamental II (5ª a 8º série)",`3`="Médio (antigo 2ª Grau)",
