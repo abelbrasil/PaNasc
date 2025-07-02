@@ -3,7 +3,7 @@ if (!require("read.dbc")) {
   library(read.dbc)
 }
 library(devtools)
-install_github("abelbrasil/PaNasc", auth_token = "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")
+install_github("abelbrasil/PaNasc")
 library(PaNasc)
 library(shiny)
 library(shinyjs)

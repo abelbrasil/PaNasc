@@ -2,18 +2,18 @@
 #'
 #' Download data about live birth from SINASC - DATASUS and tranform from .dbc file to data frame.
 #' @param inicio The year that start the files extract.
-#' @param fim The year that finish the files extract. By default the last year. Can't be the current year.
+#' @param fim The year that finish the files extract Can't be the current year.
 #' @param UF The state acronym.
 #' @param cod_estab The birth establishment code.
-#' @seealso \code{\link{label.sinasc}}
+#' @seealso \code{\link{process.sinasc}}
 #'
 #' @return A data frame with the filtered raw SINASC data.
 #' @author Luan Augusto, \email{luanguto87@gmail.com}
 #' @export
 #'
 #' @examples
+#' nasc <- download.sinasc(2022)
 #' pe <- download.sinasc(2022,UF="PE")
-#' sp <- download.sinasc(2020,2022,"SP")
 download.sinasc <- function(inicio,fim,UF="all",cod_estab=""){
   require(read.dbc)
   require(dplyr)
@@ -75,8 +75,6 @@ download.sinasc <- function(inicio,fim,UF="all",cod_estab=""){
       IDADEMAE=as.numeric(as.character(IDADEMAE)),
 
       QTDFILVIVO=as.numeric(as.character(QTDFILVIVO)),
-
-      QTDFILMORT=as.numeric(as.character(QTDFILMORT)),
 
       QTDFILMORT=as.numeric(as.character(QTDFILMORT)),
 

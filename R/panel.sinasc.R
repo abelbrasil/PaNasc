@@ -17,7 +17,7 @@ panel.sinasc <- function(data){
 
            `Código Município de Nascimento`=CODMUNNASC,`UF de Nascimento`=UFNASC,`Região de Nascimento`=REGIAO_NASC,`Vínculo`=VINCULO,`Município de Nascimento`=MUNNASC,
 
-           `Sexo`=SEXO,`Peso`=PESO,`Faixa de Peso`=FAIXA_PESO,`Semanas de Gestação`=SEMAGESTAC,`Gestação`=GESTACAO,`Gravidez`=GRAVIDEZ,
+           `Sexo`=SEXO,`Peso`=PESO,`Faixa de Peso`=FAIXA_PESO,`Semanas de Gestação`=SEMAGESTAC,`Gestação`=GESTACAO,`Gravidez`=GRAVIDEZ,`Grupo de Robson` = TPROBSON,
 
            `Parto`=PARTO,`Data de Nascimento`=DTNASC,`Hora de Nascimento`=HORANASC,`Ano`=ANO,`Mês-Ano`=MES_ANO,`Raça/Cor`=RACACOR,
 

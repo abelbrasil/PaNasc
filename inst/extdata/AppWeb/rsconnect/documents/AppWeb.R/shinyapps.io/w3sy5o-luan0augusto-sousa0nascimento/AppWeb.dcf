@@ -1,0 +1,13 @@
+name: AppWeb
+title: AppWeb
+username: w3sy5o-luan0augusto-sousa0nascimento
+account: w3sy5o-luan0augusto-sousa0nascimento
+server: shinyapps.io
+hostUrl: https://api.shinyapps.io/v1
+appId: 14991668
+bundleId: 10519497
+url: https://w3sy5o-luan0augusto-sousa0nascimento.shinyapps.io/AppWeb/
+version: 1
+asMultiple: FALSE
+asStatic: FALSE
+ignoredFiles: www/logo-meac.png|www/Logo_da_EBSERH.png|www/Thumbs.db

@@ -28,6 +28,17 @@ The package can be installed using the `devtools` library:
 devtools::install_github("abelbrasil/PaNasc")
 ```
 
+## Example
+
+``` R
+library(PaNasc)
+data <- download.sinasc(inicio = 2022, fim = 2023, UF = "CE")
+data_processed <- process.sinasc(data)
+fNasc_Vivos <- panel.sinasc(data_processed)
+save("fNasc\_Vivos",
+        file = "caminho_do_arquivo/dataset.Rdata")
+```
+
 ## Contact Info
 
 If you have any questions, please contact me at [luanguto87\@gmail.com](mailto:luanguto87@gmail.com).
