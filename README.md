@@ -30,7 +30,7 @@ devtools::install_github("abelbrasil/PaNasc")
 
 ## Example
 
-``` R
+``` r
 library(PaNasc)
 data <- download.sinasc(inicio = 2022, fim = 2023, UF = "CE")
 data_processed <- process.sinasc(data)
