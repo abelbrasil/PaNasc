@@ -45,8 +45,8 @@ remotes::install_github("abelbrasil/PaNasc")
 library(PaNasc)
 data <- download.sinasc(inicio = 2022, fim = 2023, UF = "CE")
 data_processed <- process.sinasc(data)
-rm(data, data_processed)
 fNasc_Vivos <- panel.sinasc(data_processed)
+rm(data, data_processed)
 save.image("dataset.Rdata")
 ```
 
