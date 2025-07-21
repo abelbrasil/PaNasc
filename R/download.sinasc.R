@@ -41,7 +41,7 @@ download.sinasc <- function(inicio,fim,UF="all",cod_estab=""){
     }
     else
       if (UF=="all"){
-        url <- paste0("ftp://ftp.datasus.gov.br/dissemin/publicos/SINASC/PRELIM/DNRES/","DN",TABUF$SIGLA_UF,i,".dbc")
+        url <- paste0("ftp://ftp.datasus.gov.br/dissemin/publicos/SINASC/1996_/Dados/DNRES/","DN",TABUF$SIGLA_UF,i,".dbc")
       }
       else
         url <- paste0("ftp://ftp.datasus.gov.br/dissemin/publicos/SINASC/1996_/Dados/DNRES/","DN",UF,i,".dbc")
