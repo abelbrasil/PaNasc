@@ -103,8 +103,7 @@ download.sinasc <- function(inicio,fim,UF="all",cod_estab=""){
   ifelse(cod_estab %in% db$CODESTAB,db <- db %>% filter(CODESTAB %in% cod_estab),db)
 
 
-  db <- db %>%
-    left_join(ESTAB%>% select(CNES, FANTASIA),by=join_by(CODESTAB==CNES),keep = F)
+
 
   return(db)
 }

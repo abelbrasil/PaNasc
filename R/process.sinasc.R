@@ -16,6 +16,9 @@ process.sinasc <- function(data){
   require(lubridate)
   base <- data
 
+  base <- base %>%
+    left_join(ESTAB%>% select(CNES, FANTASIA),by=join_by(CODESTAB==CNES),keep = F)
+
 
   base <- base %>%
     mutate(ESTCIVMAE=recode(ESTCIVMAE,`1`="Solteira",`2`="Casada",`3`="Viúva",`4`="Divorciada",`5`="União Estável",`9`="Ignorado"),
