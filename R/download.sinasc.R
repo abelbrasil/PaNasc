@@ -34,17 +34,17 @@ download.sinasc <- function(inicio,fim,UF="all",cod_estab=""){
   for (i in anos) {
     if(i==as.numeric(format(Sys.Date(), "%Y"))-1){
       if (UF=="all"){
-        url <- paste0("ftp://ftp.datasus.gov.br/dissemin/publicos/SINASC/PRELIM/DNRES/","DN",TABUF$SIGLA_UF,i,".dbc")
+        url <- paste0("ftp://ftp.datasus.gov.br/dissemin/publicos/SINASC/PRELIM/DNRES/","DN",TABUF$SIGLA_UF,i,".DBC")
       }
       else
-        url <- paste0("ftp://ftp.datasus.gov.br/dissemin/publicos/SINASC/PRELIM/DNRES/","DN",UF,i,".dbc")
+        url <- paste0("ftp://ftp.datasus.gov.br/dissemin/publicos/SINASC/PRELIM/DNRES/","DN",UF,i,".DBC")
     }
     else
       if (UF=="all"){
-        url <- paste0("ftp://ftp.datasus.gov.br/dissemin/publicos/SINASC/1996_/Dados/DNRES/","DN",TABUF$SIGLA_UF,i,".dbc")
+        url <- paste0("ftp://ftp.datasus.gov.br/dissemin/publicos/SINASC/1996_/Dados/DNRES/","DN",TABUF$SIGLA_UF,i,".DBC")
       }
       else
-        url <- paste0("ftp://ftp.datasus.gov.br/dissemin/publicos/SINASC/1996_/Dados/DNRES/","DN",UF,i,".dbc")
+        url <- paste0("ftp://ftp.datasus.gov.br/dissemin/publicos/SINASC/1996_/Dados/DNRES/","DN",UF,i,".DBC")
     urls <- append(urls,url)
   }
   for (i in 1:length(urls)) {
